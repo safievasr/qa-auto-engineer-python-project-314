@@ -1,0 +1,29 @@
+[project]
+name = "qa-auto-engineer-python-project-314"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "safievasr", email = "safievasr051@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "allure-pytest>=2.16.2",
+    "pytest>=9.1.1",
+    "selenium>=4.51.0",
+    "tree>=0.2.4",
+]
+
+[dependency-groups]
+dev = [
+    "python-dotenv>=1.2.4",
+    "qa-auto-engineer-python-project-314",
+]
+
+[tool.uv.workspace]
+members = [
+    ".",
+]
+
+[tool.uv.sources]
+qa-auto-engineer-python-project-314 = { workspace = true }
