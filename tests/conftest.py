@@ -29,6 +29,9 @@ def driver():
     opts.add_argument("--window-size=1366,768")
     opts.add_argument("--disable-notifications")
     opts.add_argument("--lang=ru-RU")
+    opts.add_argument("--no-sandbox")
+    opts.add_argument("--disable-dev-shm-usage")
+    opts.add_argument("--disable-gpu")
     if os.getenv("HEADLESS", "1") == "1":
         opts.add_argument("--headless=new")
 
