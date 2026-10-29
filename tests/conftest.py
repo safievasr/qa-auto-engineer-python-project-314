@@ -27,6 +27,7 @@ def base_url() -> str:
 @pytest.fixture
 def driver():
     opts = Options()
+    opts.page_load_strategy = "eager"
     opts.add_argument("--window-size=1366,768")
     opts.add_argument("--disable-notifications")
     opts.add_argument("--lang=ru-RU")
