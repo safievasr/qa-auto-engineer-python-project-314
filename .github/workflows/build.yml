@@ -1,5 +1,4 @@
-name: SonarCloud
-
+name: SonarQube
 on:
   push:
     branches:
@@ -7,22 +6,27 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  sonarqube:
-    name: SonarQube Cloud
-    runs-on: ubuntu-latest
+  build:
+    name: Build and analyze
+    runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
-          fetch-depth: 0
-      - name: Setup Python
-        uses: actions/setup-python@v6
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      # This step should build, test and generate coverage reports
+      # - name: Build and test
+      #   run: <build + test + generate coverage reports>
+      - name: Cache SonarQube packages
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
-          python-version: ${{ matrix.python }}
-      - name: Install tox and any other packages
-        run: pip install tox
-      - name: Run tox
-        run: tox -e py
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v7
+        uses: SonarSource/sonarqube-scan-action@4d1dc0c91ee400dcf8a6dddf2f705ac36542e304 # v8.4.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=safievasr
+            -Dsonar.projectKey=safievasr_qa-auto-engineer-python-project-314
