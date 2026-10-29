@@ -415,6 +415,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "allure-pytest" },
+    { name = "coverage" },
     { name = "pytest" },
     { name = "selenium" },
     { name = "tree" },
@@ -431,6 +432,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "allure-pytest", specifier = ">=2.16.2" },
+    { name = "coverage", specifier = ">=7.17.0" },
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "selenium", specifier = ">=4.51.0" },
     { name = "tree", specifier = ">=0.2.4" },
