@@ -2,8 +2,6 @@
 
 [![hexlet-check](https://github.com/safievasr/qa-auto-engineer-python-project-314/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/safievasr/qa-auto-engineer-python-project-314/actions)
 
-[![Python CI](https://github.com/safievasr/qa-auto-engineer-python-project-341/actions/workflows/pyci.yml/badge.svg)](https://github.com/safievasr/qa-auto-engineer-python-project-341/actions/workflows/pyci.yml)
-
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=safievasr_qa-auto-engineer-python-project-314&metric=coverage)](https://sonarcloud.io/summary/new_code?id=safievasr_qa-auto-engineer-python-project-314)
 
 Напишите тесты для проверки работы приложения
