@@ -18,11 +18,18 @@ jobs:
         run: |
           pip install uv
           make install
-      - name: Run linter and pytest
+      - name: Start application
         run: |
-          make check
-      # Порог покрытия задан в pyproject.toml ([tool.coverage.report] fail_under),
-      # поэтому шаг падает при просадке покрытия, и бейджик CI отражает в том числе его
+          docker run --detach --name kanban-app -p 5173:5173 hexletprojects/qa_auto_python_testing_kanban_board_project_ru_app
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://localhost:5173 > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs kanban-app
+          exit 1
+      - name: Run linter
+        run: make lint
       - name: Run test coverage
-        run: |
-          make test-coverage
+        run: make test-coverage

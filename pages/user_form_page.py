@@ -11,9 +11,7 @@ class UserFormPage(BaseFormPage):
     LAST_NAME_INPUT = (By.CSS_SELECTOR, 'input[name="lastName"]')
     SAVE_BTN = (By.CSS_SELECTOR, 'form button[type="submit"]')
 
-    EMAIL_ERROR = (By.XPATH,"//input[@name='email']/ancestor::*[contains(@class,'MuiFormControl')]"
-            "//*[contains(@class,'Mui-error')]",
-    )
+    EMAIL_ERROR = (By.CSS_SELECTOR, '[id$="-helper-text"]')
     FIELD_ERROR = EMAIL_ERROR
 
     def fill(self, user: dict) -> "UserFormPage":

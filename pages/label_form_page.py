@@ -7,7 +7,7 @@ from core.form_page import BaseFormPage
 class LabelFormPage(BaseFormPage):
     NAME_INPUT = (By.CSS_SELECTOR, 'input[name="name"]')
 
-    NAME_ERROR = (By.ID, ":ra:-helper-text")
+    NAME_ERROR = (By.CSS_SELECTOR, '[id$="-helper-text"]')
 
     def fill(self, label: dict):
         if label.get("name") is not None:

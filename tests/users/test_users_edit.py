@@ -37,7 +37,7 @@ def test_edit_invalid_email_shows_error(
     form.save(expect_redirect=False)
 
     error = form.wait.until(EC.visibility_of_element_located(form.EMAIL_ERROR))
-    assert error.text == "Must be a valid email"
+    assert error.text == "Incorrect email format"
     assert form.values()["email"] == bad_email
 
     users_page.open(base_url)
