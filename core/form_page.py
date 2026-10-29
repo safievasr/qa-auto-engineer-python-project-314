@@ -1,12 +1,13 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
 from core.page import BasePage
 
 
 class BaseFormPage(BasePage):
-    FORM = (By.CSS_SELECTOR, "form, [role='form'], main")
+    FORM = (By.CSS_SELECTOR, "form, [role='form']")
     SAVE_BTN = (By.CSS_SELECTOR, 'form button[type="submit"]')
     SNACKBAR = (By.CSS_SELECTOR,".RaNotification-root, .MuiSnackbar-root, [role='alert']")
     FIELD_ERROR = (By.CSS_SELECTOR,".Mui-error, .MuiFormHelperText-root.Mui-error, [aria-invalid='true']")

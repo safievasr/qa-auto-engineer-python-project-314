@@ -1,13 +1,12 @@
-import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from data.tasks import make_task
 from data.labels import make_label
-from pages.task_form_page import TaskFormPage
+from data.tasks import make_task
 from pages.label_form_page import LabelFormPage
 from pages.labels_page import LabelsPage
+from pages.task_form_page import TaskFormPage
 
 
 def _open_and_pick(driver, field: str, value: str):
@@ -100,14 +99,33 @@ def test_filter_by_assignee(board_page, created_task):
         else "michael@example.com"
     )
 
-    assert board_page.column_of_card(created_task["title"]) is not None
+    matching = make_task(
+        "flt-assignee-match",
+        status=created_task["status"],
+        assignee=current,
+    )
+    non_matching = make_task(
+        "flt-assignee-other",
+        status=created_task["status"],
+        assignee=other_assignee,
+    )
 
     try:
-        _open_and_pick(board_page.driver, "assignee_id", other_assignee)
+        _create_task(board_page, matching)
+        _create_task(board_page, non_matching)
+        assert board_page.column_of_card(matching["title"]) == matching["status"]
+        assert (
+            board_page.column_of_card(non_matching["title"])
+            == non_matching["status"]
+        )
 
-        board_page.wait_for_card_absence(created_task["title"])
+        _open_and_pick(board_page.driver, "assignee_id", current)
+
+        assert board_page.column_of_card(matching["title"]) == matching["status"]
+        board_page.wait_for_card_absence(non_matching["title"])
     finally:
-        board_page.clear_filters()
+        _delete_task(board_page, matching["title"])
+        _delete_task(board_page, non_matching["title"])
 
 
 def test_filter_by_label(board_page, base_url):

@@ -4,6 +4,9 @@ start:
 smoke:
 	uv run pytest -k smoke
 
+lint:
+	uv run ruff check .
+
 test:
 	uv run pytest
 

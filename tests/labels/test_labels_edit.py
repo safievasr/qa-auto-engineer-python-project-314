@@ -1,4 +1,4 @@
-import pytest
+from selenium.webdriver.support import expected_conditions as EC
 
 from data.labels import make_label
 from pages.label_form_page import LabelFormPage
@@ -32,12 +32,9 @@ def test_edit_to_empty_name_blocked(labels_page, created_label):
     form.type(form.NAME_INPUT, "")
     form.save(expect_redirect=False)
 
-    on_form = form.is_visible(form.FORM, timeout=1)
-    has_err = form.has_name_error(timeout=1)
+    error = form.wait.until(EC.visibility_of_element_located(form.NAME_ERROR))
+    assert error.text == "Required"
+    assert form.values()["name"] == ""
 
-    if not on_form and not has_err:
-        pytest.xfail(
-            f"Приложение разрешает сохранить метку с пустым названием. "
-            f"URL: {labels_page.driver.current_url}"
-        )
-    assert has_err or on_form
+    labels_page.open()
+    assert labels_page.is_present(created_label["name"])

@@ -1,4 +1,5 @@
 import pytest
+
 from data.tasks import make_task
 from pages.task_form_page import TaskFormPage
 

@@ -1,4 +1,6 @@
 import pytest
+from selenium.webdriver.support import expected_conditions as EC
+
 from data.users import make_user
 from pages.user_form_page import UserFormPage
 
@@ -22,11 +24,18 @@ def test_create_user_appears_in_list(users_page, base_url):
 
 
 def test_create_user_without_email_blocked(users_page, base_url):
+    user = make_user("nomail")
     users_page.click_create()
     form = UserFormPage(users_page.driver).wait_opened()
-    form.fill({"first_name": "NoMail", "last_name": "User"})
+    form.fill({
+        "first_name": user["first_name"],
+        "last_name": user["last_name"],
+    })
 
     form.save(expect_redirect=False)
 
-    assert form.is_visible(form.FORM) or form.has_email_error(), \
-        "Приложение не должно уходить с формы без email"
+    error = form.wait.until(EC.visibility_of_element_located(form.EMAIL_ERROR))
+    assert error.text == "Required"
+    assert form.values()["email"] == ""
+    users_page.open(base_url)
+    assert not users_page.is_present(user["first_name"], timeout=1)

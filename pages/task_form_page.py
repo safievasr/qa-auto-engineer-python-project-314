@@ -1,9 +1,10 @@
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import TimeoutException
+
 from core.form_page import BaseFormPage
 
 
@@ -46,41 +47,34 @@ class TaskFormPage(BaseFormPage):
         except Exception:
             self.driver.execute_script("arguments[0].click();", clickable)
 
-        def _options_visible(d):
-            return d.find_elements(By.CSS_SELECTOR,
-                "li[role='option'], div[role='option'], li.MuiMenuItem-root"
+        def _visible_option(d):
+            options = d.find_elements(
+                By.CSS_SELECTOR,
+                "li[role='option'], div[role='option'], li.MuiMenuItem-root",
             )
+            for option in options:
+                try:
+                    if option.is_displayed() and value in (option.text or ""):
+                        return option
+                except StaleElementReferenceException:
+                    continue
+            return False
 
         try:
-            WebDriverWait(self.driver, 5).until(
-                lambda d: len(_options_visible(d)) > 0
+            chosen = WebDriverWait(self.driver, 5).until(
+                _visible_option,
+                message=f"Опция {value!r} не найдена в видимом меню {field!r}",
             )
         except TimeoutException:
-            opts = _options_visible(self.driver)
-            raise AssertionError(
-                f"Меню {field!r} не открылось после клика. "
-                f"Найдено опций: {len(opts)}. "
-                f"HTML обёртки: {wrapper.get_attribute('outerHTML')[:400]}"
+            opts = self.driver.find_elements(
+                By.CSS_SELECTOR,
+                "li[role='option'], div[role='option'], li.MuiMenuItem-root",
             )
-
-        options = _options_visible(self.driver)
-        chosen = None
-        for opt in options:
-            try:
-                if opt.is_displayed() and value in (opt.text or ""):
-                    chosen = opt
-                    break
-            except Exception:
-                continue
-
-        if chosen is None:
-            visible_texts = [
-                (o.text or "").strip()
-                for o in options if o.is_displayed()
-            ]
             raise AssertionError(
-                f"Опция {value!r} не найдена в {field!r}. "
-                f"Доступные: {visible_texts}"
+                f"Видимая опция {value!r} не найдена в меню {field!r}. "
+                f"Доступные: "
+                f"{[(o.text or '').strip() for o in opts if o.is_displayed()]}. "
+                f"HTML обёртки: {wrapper.get_attribute('outerHTML')[:400]}"
             )
 
         try:

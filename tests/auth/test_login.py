@@ -1,6 +1,7 @@
 import pytest
-from pages.login_page import LoginPage
+
 from pages.board_page import BoardPage
+from pages.login_page import LoginPage
 
 
 @pytest.mark.smoke

@@ -9,10 +9,12 @@ def test_board_loads(board_page):
 
 
 def test_created_task_appears_in_column(board_page, created_task):
-    assert created_task["status"] in board_page.column_titles()
-    assert board_page.is_task_in_column(
-        created_task["title"], created_task["status"]
+    titles = board_page.column_titles()
+    assert created_task["status"] in titles
+    assert created_task["title"] in board_page.card_titles_in_column(
+        created_task["status"]
     )
+    assert board_page.column_of_card(created_task["title"]) == created_task["status"]
 
 
 def test_move_task_between_columns(board_page, created_task):

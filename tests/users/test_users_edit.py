@@ -1,4 +1,6 @@
 import pytest
+from selenium.webdriver.support import expected_conditions as EC
+
 from pages.user_form_page import UserFormPage
 
 
@@ -25,17 +27,19 @@ def test_edit_updates_values(users_page, created_user, base_url):
 
 
 @pytest.mark.parametrize("bad_email", ["user", "user@", "@example.com"])
-def test_edit_invalid_email_shows_error(users_page, created_user, bad_email):
+def test_edit_invalid_email_shows_error(
+    users_page, created_user, bad_email, base_url
+):
     users_page.open_edit_for(created_user["email"])
     form = UserFormPage(users_page.driver).wait_opened()
 
     form.fill({"email": bad_email})
     form.save(expect_redirect=False)
-    has_err = form.has_email_error(timeout=2)
-    if not has_err:
-        pytest.xfail(
-            f"Приложение не валидирует формат email: '{bad_email}' "
-            f"Текущий URL: '{users_page.driver.current_url}' "
-        )
 
-    assert has_err
+    error = form.wait.until(EC.visibility_of_element_located(form.EMAIL_ERROR))
+    assert error.text == "Must be a valid email"
+    assert form.values()["email"] == bad_email
+
+    users_page.open(base_url)
+    assert users_page.is_present(created_user["email"])
+    assert not users_page.is_present(bad_email, timeout=1)

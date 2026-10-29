@@ -1,21 +1,22 @@
 import os
+
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from pages.login_page import LoginPage
-from pages.users_page import UsersPage
-from data.users import make_user
-from pages.user_form_page import UserFormPage
-from pages.statuses_page import StatusesPage
-from pages.status_form_page import StatusFormPage
-from data.statuses import make_status
-from pages.labels_page import LabelsPage
-from pages.label_form_page import LabelFormPage
 from data.labels import make_label
-from pages.task_form_page import TaskFormPage
-from pages.board_page import BoardPage
+from data.statuses import make_status
 from data.tasks import make_task
+from data.users import make_user
+from pages.board_page import BoardPage
+from pages.label_form_page import LabelFormPage
+from pages.labels_page import LabelsPage
+from pages.login_page import LoginPage
+from pages.status_form_page import StatusFormPage
+from pages.statuses_page import StatusesPage
+from pages.task_form_page import TaskFormPage
+from pages.user_form_page import UserFormPage
+from pages.users_page import UsersPage
 
 
 @pytest.fixture(scope="session")

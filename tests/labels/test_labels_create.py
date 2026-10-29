@@ -1,4 +1,5 @@
 import pytest
+
 from data.labels import make_label
 from pages.label_form_page import LabelFormPage
 

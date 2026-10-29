@@ -1,4 +1,5 @@
 import pytest
+
 from data.statuses import make_status
 from pages.status_form_page import StatusFormPage
 

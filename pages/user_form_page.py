@@ -1,6 +1,6 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 from core.form_page import BaseFormPage
 
 
@@ -36,16 +36,3 @@ class UserFormPage(BaseFormPage):
             "first_name": _val(self.FIRST_NAME_INPUT),
             "last_name": _val(self.LAST_NAME_INPUT),
         }
-
-    def has_email_error(self, timeout: float = 3.0) -> bool:
-        try:
-            WebDriverWait(self.driver, timeout).until(
-                EC.visibility_of_element_located(self.EMAIL_ERROR)
-            )
-            return True
-        except Exception:
-            try:
-                el = self.driver.find_element(*self.EMAIL_INPUT)
-                return el.get_attribute("aria-invalid") == "true"
-            except Exception:
-                return False
