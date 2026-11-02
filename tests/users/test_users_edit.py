@@ -1,6 +1,7 @@
 import pytest
 from selenium.webdriver.support import expected_conditions as EC
 
+from data.users import INVALID_EMAILS
 from pages.user_form_page import UserFormPage
 
 
@@ -26,7 +27,7 @@ def test_edit_updates_values(users_page, created_user, base_url):
     assert new_last in row.text
 
 
-@pytest.mark.parametrize("bad_email", ["user", "user@", "@example.com"])
+@pytest.mark.parametrize("bad_email", INVALID_EMAILS)
 def test_edit_invalid_email_shows_error(
     users_page, created_user, bad_email, base_url
 ):

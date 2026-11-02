@@ -30,10 +30,7 @@ class BasePage:
         except ElementClickInterceptedException:
             self.driver.execute_script("arguments[0].click();", el)
 
-    def type(self, locator, text, extra=None):
-        if extra is not None:
-            locator = (locator, text)
-            text = extra
+    def type(self, locator, text):
         locator = self._loc(locator)
         el = self.wait.until(EC.visibility_of_element_located(locator))
         el.send_keys(Keys.CONTROL, "a")
@@ -80,8 +77,12 @@ class BasePage:
         except TimeoutException:
             return
 
+        confirm_buttons = (
+            (By.XPATH, ".//button[contains(., 'Delete')]"),
+            (By.XPATH, ".//button[contains(., 'Удалить')]"),
+        )
         clicked = False
-        for loc in (By.XPATH, ".//button[contains(., 'Delete')"):
+        for loc in confirm_buttons:
             try:
                 btn = dialog.find_element(*loc)
                 try:

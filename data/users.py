@@ -11,6 +11,7 @@ def make_user(prefix: str = "auto") -> dict:
 
 
 INVALID_EMAILS = [
+    "user",
     "user@",
     "@example.com",
 ]
