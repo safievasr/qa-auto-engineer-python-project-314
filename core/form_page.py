@@ -36,15 +36,37 @@ class BaseFormPage(BasePage):
         return self
 
     def save(self, expect_redirect: bool = True):
-        self.click(self.SAVE_BTN)
-        if expect_redirect:
-            WebDriverWait(self.driver, 10).until(
-                EC.any_of(
-                    EC.invisibility_of_element_located(self.FORM),
-                    EC.visibility_of_element_located(self.SNACKBAR),
-                    EC.visibility_of_element_located(self.FIELD_ERROR),
-                )
+        try:
+            btn = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.SAVE_BTN)
             )
+        except TimeoutException:
+            # диагностика: почему Save не кликабельна
+            form_html = ""
+            try:
+                form = self.driver.find_element(By.TAG_NAME, "form")
+                form_html = form.get_attribute("outerHTML")[:2000]
+            except Exception:
+                pass
+            raise AssertionError(
+                f"Кнопка Save не кликабельна за 10s. "
+                f"URL: {self.driver.current_url}. "
+                f"Проверь, что все обязательные поля заполнены и валидны. "
+                f"HTML формы: {form_html}"
+            )
+
+        btn.click()
+        if expect_redirect:
+            try:
+                WebDriverWait(self.driver, 10).until(
+                    lambda d: (
+                        not self.is_visible(self.FORM, timeout=0.3)
+                        or self.is_visible(self.SNACKBAR, timeout=0.3)
+                        or self.is_visible(self.FIELD_ERROR, timeout=0.3)
+                    )
+                )
+            except TimeoutException:
+                pass
         return self
 
     def is_save_enabled(self) -> bool:

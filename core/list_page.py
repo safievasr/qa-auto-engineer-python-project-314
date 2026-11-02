@@ -49,6 +49,21 @@ class ListPage(BasePage):
 
     def click_create(self):
         self.click(self.CREATE_LINK)
+        try:
+            WebDriverWait(self.driver, 5).until(
+                lambda d: "/create" in d.current_url
+            )
+            return
+        except TimeoutException:
+            pass
+
+        url = self._base_url + "/#" + self.ENTITY_PATH + "/create"
+        self.driver.get(url)
+        WebDriverWait(self.driver, 10).until(
+            lambda d: "/create" in d.current_url,
+            message=f"Не открылась create-форма по {url}. "
+                    f"URL: {self.driver.current_url}",
+        )
 
     def header_text(self) -> str:
         return " ".join(

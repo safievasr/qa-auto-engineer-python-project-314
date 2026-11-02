@@ -5,10 +5,14 @@ from pages.status_form_page import StatusFormPage
 
 
 def _create(statuses_page, base_url, status):
+    statuses_page.open(base_url)
     statuses_page.click_create()
     StatusFormPage(statuses_page.driver).wait_opened().fill(status).save()
     statuses_page.open(base_url)
-    statuses_page.row_by_text(status["name"])
+    statuses_page.wait.until(
+        lambda d: statuses_page.is_present(status["name"], timeout=0.5),
+        message=f"Не создан {status['name']}",
+    )
 
 
 def test_delete_single_status(statuses_page, base_url):

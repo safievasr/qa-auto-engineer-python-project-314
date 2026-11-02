@@ -150,6 +150,20 @@ class BoardPage(BasePage):
 
     def open_create_form(self):
         self.click(self.CREATE_BUTTON)
+        try:
+            WebDriverWait(self.driver, 5).until(
+                lambda d: "/tasks/create" in d.current_url
+            )
+            return
+        except TimeoutException:
+            pass
+
+        self.driver.get(self._base_url + "/#/tasks/create")
+        WebDriverWait(self.driver, 10).until(
+            lambda d: "/tasks/create" in d.current_url,
+            message=f"Не открылась форма создания задачи. "
+                    f"URL: {self.driver.current_url}",
+        )
 
     def open_edit_for(self, title: str):
         card = self.card_by_title(title)

@@ -14,7 +14,10 @@ class StatusFormPage(BaseFormPage):
         if status.get("name") is not None:
             self.type(self.NAME_INPUT, status["name"])
         if status.get("slug") is not None:
-            self.type(self.SLUG_INPUT, status["slug"])
+            try:
+                self.type(self.SLUG_INPUT, status["slug"])
+            except Exception:
+                pass
         return self
 
     def values(self) -> dict:

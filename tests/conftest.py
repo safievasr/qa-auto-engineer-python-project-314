@@ -27,7 +27,6 @@ def base_url() -> str:
 @pytest.fixture
 def driver():
     opts = Options()
-    opts.page_load_strategy = "eager"
     opts.add_argument("--window-size=1366,768")
     opts.add_argument("--disable-notifications")
     opts.add_argument("--lang=ru-RU")
@@ -79,16 +78,23 @@ def statuses_page(authorized_user, base_url):
 @pytest.fixture
 def created_status(statuses_page, base_url):
     status = make_status()
+    statuses_page.open(base_url)
     statuses_page.click_create()
     StatusFormPage(statuses_page.driver).wait_opened().fill(status).save()
 
     statuses_page.open(base_url)
-    statuses_page.row_by_text(status["name"])
+    statuses_page.wait.until(
+        lambda d: statuses_page.is_present(status["name"], timeout=0.5),
+        message=f"Статус {status['name']} не появился после создания",
+    )
+
     yield status
 
-    statuses_page.open()
-    if statuses_page.is_present(status["name"], timeout=1.0):
-        statuses_page.delete_row(status["name"])
+    try:
+        if statuses_page.is_present(status["name"], timeout=1.0):
+            statuses_page.delete_row(status["name"])
+    except Exception:
+        pass
 
 
 @pytest.fixture
