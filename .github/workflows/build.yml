@@ -19,7 +19,7 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: |
-          pip install uv
+          pip install "uv==0.12.3" --only-binary :all:
           make install
       - name: Start application
         run: |
